@@ -25,4 +25,18 @@ public class PiModel extends Observable{
 		setChanged();
 		notifyObservers(msg);;
 	}
+
+	public void updatePersonArrivalTime(Person person, Estimated_time time) {
+		// TODO Auto-generated method stub
+		if (mission !=null)
+		{
+			mission.updateEngaged(person, time);
+			
+			Object[] msg = new Object[2];
+			msg[0] = "update mission";
+			msg[1] = mission;
+			setChanged();
+			notifyObservers(msg);
+		}
+	}
 }

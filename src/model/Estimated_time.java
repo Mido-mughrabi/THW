@@ -23,6 +23,10 @@ public enum Estimated_time {
     
     private Estimated_time time ;
     
+    public String getTime() {
+        return this.name();
+    }
+    
     public Estimated_time getESTIMATED_TIME() {
     	if(time == null) time = Estimated_time.UNKNOWN;
     	return time;

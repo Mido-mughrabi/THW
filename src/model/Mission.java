@@ -26,4 +26,11 @@ public class Mission {
 	{
 		engaged.put(person.toString(), Estimated_time.UNKNOWN.toString());
 	}
+
+
+	public void updateEngaged(Person person, Estimated_time time) {
+		System.out.println(time.toString());
+		engaged.put(person.toString(), time.toString());
+	}
+	
 }

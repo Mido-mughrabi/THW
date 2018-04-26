@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 
 import model.Mission;
 import model.Person;
+import model.Estimated_time;
 import model.Functions;
 import model.Unit_types;
 
@@ -26,8 +27,9 @@ public class ClientSocket extends WebSocketAdapter{
 		//toDo: maybe want to call some init functions here
 		////////////////////////////////////////////////////////// testArea, please delete
 		JsonObject json = new JsonObject();
-		json.addProperty("action", "auth");
-		json.addProperty("token", "that is my client token");
+		json.addProperty("action", "start mission");
+		json.addProperty("action", "update arrival time");
+		//json.addProperty("token", "that is my client token");
 		Mission m = new Mission(LocalDateTime.now());
 		Person p = new Person("0156", "lala",Functions.SKILLED_WORKER, Unit_types.OV_STAB);
 		Person p2 = new Person("123", "lalasda",Functions.SKILLED_WORKER, Unit_types.OV_STAB);
@@ -35,6 +37,7 @@ public class ClientSocket extends WebSocketAdapter{
 		m.addEngaged(p2);
 		json.add("person", gson.toJsonTree(p));
 		json.add("mission", gson.toJsonTree(m));
+		json.add("arrival time", gson.toJsonTree(Estimated_time.FIVE_MINS));
 		try {
 			getSession().getRemote().sendString(json.toString());
 		} catch (IOException e) {

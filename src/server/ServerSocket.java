@@ -12,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import io.IO;
+import model.Estimated_time;
 import model.Mission;
 import model.Person;
 import model.ServerModel;
@@ -32,6 +33,7 @@ public class ServerSocket extends WebSocketAdapter{
 		System.out.println(token);
 		System.out.println("Socket Connected: " + sess);
 		this.session = sess;
+		sessions.add(session);		//toDo, just after auth!
 		//toDo: compare client's token with server's token
 	}
 	
@@ -47,23 +49,36 @@ public class ServerSocket extends WebSocketAdapter{
 		Person person = null;
 		switch (action) {
 		case "add person":
+			//checkToken(json.get("token").getAsString());
 			person = gson.fromJson(json.get("person"), Person.class);
 			ServerModel.addPerson(person);
 			break;
 		case "delete person":
+			//checkToken(json.get("token").getAsString());
 			person = gson.fromJson(json.get("person"), Person.class);
 			ServerModel.deletePerson(person);
 			break;
 		case "update person":
+			//checkToken(json.get("token").getAsString());
 			person = gson.fromJson(json.get("person"), Person.class);
 			ServerModel.updatePerson(person);
 			break;
 		case "start mission":
+			//checkToken(json.get("token").getAsString());
 			mission = gson.fromJson(json.get("mission"), Mission.class);
 			ServerModel.startMission(mission);
 			break;
 		case "end mission":
+			//checkToken(json.get("token").getAsString());
 			ServerModel.endMission();
+			break;
+		case "update arrival time":
+			person = gson.fromJson(json.get("person"), Person.class);
+			Estimated_time time = gson.fromJson("arrival time", Estimated_time.class);
+			if(mission != null)
+			{
+				mission.updateEngaged(person,time);
+			}
 			break;
 		case "auth":
 			//toDo: auth between server and client
@@ -77,6 +92,18 @@ public class ServerSocket extends WebSocketAdapter{
 		sendAll(message);
 	}
 	
+	private void checkToken(String token) {
+		if (!token.equals(this.token))
+		{
+			try {
+				session.disconnect();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private void sendAll(String message){
 		for (Session session : sessions) {
 			try {

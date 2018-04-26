@@ -38,10 +38,21 @@ public class PiView extends JFrame implements Observer{
 			Object[] msg = (Object[]) arg;
 			String change = (String) msg[0];
 			switch (change) {
-			case "start mission":
+			case "start mission": 
 				Mission mission = (Mission) msg[1];
 				contentPane.removeAll();
 				JLabel label = new JLabel("mission arrived !");
+				contentPane.add(label);
+				for(String p : mission.getEngaged().keySet())
+				{
+					JLabel personLabel = new JLabel(p + ":" + mission.getEngaged().get(p));
+					contentPane.add(personLabel);
+				}
+				break;
+			case "update mission": //todo merge with first one
+				mission = (Mission) msg[1];
+				contentPane.removeAll();
+				label = new JLabel("mission arrived !");
 				contentPane.add(label);
 				for(String p : mission.getEngaged().keySet())
 				{

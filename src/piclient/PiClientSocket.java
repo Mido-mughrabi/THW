@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import controller.PiController;
 import model.Mission;
 import model.Person;
+import model.Estimated_time;
 import model.Functions;
 import model.Unit_types;
 
@@ -19,7 +20,7 @@ public class PiClientSocket extends WebSocketAdapter{
 	
 	private PiController controller;
 	private Gson gson = new Gson();
-	private Mission mission = null;
+	static private Mission mission = null;
 	
 	public void setController(PiController control) {
 		this.controller = control;
@@ -51,6 +52,11 @@ public class PiClientSocket extends WebSocketAdapter{
 			//toDo: end mission, using the piController if needed
 			controller.endMission();
 			break;
+		case "update arrival time":
+				Person person = gson.fromJson(json.get("person"), Person.class);
+				Estimated_time time = gson.fromJson(json.get("arrival time"), Estimated_time.class);
+				controller.updateEngaged(person,time);
+				break;
 		default:
 			break;
 		}

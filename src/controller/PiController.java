@@ -6,7 +6,9 @@ import java.util.concurrent.Future;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 
+import model.Estimated_time;
 import model.Mission;
+import model.Person;
 import model.PiModel;
 import piclient.PiClientSocket;
 import view.PiView;
@@ -52,6 +54,11 @@ public class PiController {
 	public void updateMission(Mission mission) {
 		
 		
+	}
+
+	public void updateEngaged(Person person, Estimated_time time) {
+		// TODO Auto-generated method stub
+		model.updatePersonArrivalTime(person,time);
 	}
 	
 	
