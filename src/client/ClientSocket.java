@@ -28,7 +28,7 @@ public class ClientSocket extends WebSocketAdapter{
 		////////////////////////////////////////////////////////// testArea, please delete
 		JsonObject json = new JsonObject();
 		json.addProperty("action", "start mission");
-		json.addProperty("action", "update arrival time");
+		//json.addProperty("action", "update arrival time");
 		//json.addProperty("token", "that is my client token");
 		Mission m = new Mission(LocalDateTime.now());
 		Person p = new Person("0156", "lala",Functions.SKILLED_WORKER, Unit_types.OV_STAB);

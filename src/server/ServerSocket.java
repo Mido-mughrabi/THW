@@ -92,6 +92,13 @@ public class ServerSocket extends WebSocketAdapter{
 		sendAll(message);
 	}
 	
+	@Override
+	public void onWebSocketClose(int statusCode, String reason) {
+		super.onWebSocketClose(statusCode, reason);
+		System.out.println("Socket Closed: [" + statusCode + "] " + reason);
+		sessions.remove(session);
+	}
+	
 	private void checkToken(String token) {
 		if (!token.equals(this.token))
 		{
