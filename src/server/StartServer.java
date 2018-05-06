@@ -9,7 +9,6 @@ public class StartServer {
 	public static final int SERVER_PORT = 3000;
 	
 	public static void main(String[] args) throws Exception{
-		//toDo: read persons from the persons file on the start
 		Server server = new Server(SERVER_PORT);
 		ServletContextHandler ctx = new ServletContextHandler();
 		ctx.setContextPath("/");

@@ -27,7 +27,6 @@ public class PiModel extends Observable{
 	}
 
 	public void updatePersonArrivalTime(Person person, Estimated_time time) {
-		// TODO Auto-generated method stub
 		if (mission !=null)
 		{
 			mission.updateEngaged(person, time);

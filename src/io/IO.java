@@ -59,7 +59,6 @@ public class IO {
 		try {
 			properties.load(input);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally {
@@ -68,7 +67,6 @@ public class IO {
 				try {
 					input.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

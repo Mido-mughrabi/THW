@@ -19,7 +19,9 @@ import model.ServerModel;
 
 public class ServerSocket extends WebSocketAdapter{
 	
-	private static Set<Session> sessions = new HashSet<>();
+	private static Set<Session> clientSessions = new HashSet<>();
+	private static Set<Session> piSessions = new HashSet<>();
+	private static Set<Session> androidSession = new HashSet<>();
 	private static ServerModel ServerModel = new ServerModel();
 	private static String token = IO.getToken();
 	
@@ -33,8 +35,6 @@ public class ServerSocket extends WebSocketAdapter{
 		System.out.println(token);
 		System.out.println("Socket Connected: " + sess);
 		this.session = sess;
-		sessions.add(session);		//toDo, just after auth!
-		//toDo: compare client's token with server's token
 	}
 	
 	@Override
@@ -49,70 +49,114 @@ public class ServerSocket extends WebSocketAdapter{
 		Person person = null;
 		switch (action) {
 		case "add person":
-			//checkToken(json.get("token").getAsString());
-			person = gson.fromJson(json.get("person"), Person.class);
-			ServerModel.addPerson(person);
+			if(checkToken(json.get("token").getAsString()))
+			{
+				person = gson.fromJson(json.get("person"), Person.class);
+				ServerModel.addPerson(person);
+				sendAllInSessionGroup(clientSessions,message);
+			}
 			break;
 		case "delete person":
-			//checkToken(json.get("token").getAsString());
-			person = gson.fromJson(json.get("person"), Person.class);
-			ServerModel.deletePerson(person);
+			if(checkToken(json.get("token").getAsString()))
+			{
+				person = gson.fromJson(json.get("person"), Person.class);
+				ServerModel.deletePerson(person);
+				sendAllInSessionGroup(clientSessions,message);
+			}
 			break;
 		case "update person":
-			//checkToken(json.get("token").getAsString());
-			person = gson.fromJson(json.get("person"), Person.class);
-			ServerModel.updatePerson(person);
+			if(checkToken(json.get("token").getAsString()))
+			{
+				person = gson.fromJson(json.get("person"), Person.class);
+				ServerModel.updatePerson(person);
+				sendAllInSessionGroup(clientSessions,message);
+			}
 			break;
 		case "start mission":
-			//checkToken(json.get("token").getAsString());
-			mission = gson.fromJson(json.get("mission"), Mission.class);
-			ServerModel.startMission(mission);
+			if(checkToken(json.get("token").getAsString()))
+			{
+				mission = gson.fromJson(json.get("mission"), Mission.class);
+				ServerModel.startMission(mission);
+				sendAll(message);		
+			}
 			break;
 		case "end mission":
-			//checkToken(json.get("token").getAsString());
-			ServerModel.endMission();
+			if(checkToken(json.get("token").getAsString()))
+			{
+				ServerModel.endMission();
+				sendAll(message);
+			}
 			break;
 		case "update arrival time":
-			person = gson.fromJson(json.get("person"), Person.class);
-			Estimated_time time = gson.fromJson("arrival time", Estimated_time.class);
-			if(mission != null)
+			if(checkToken(json.get("token").getAsString()))
 			{
-				mission.updateEngaged(person,time);
+				person = gson.fromJson(json.get("person"), Person.class);
+				Estimated_time time = gson.fromJson("arrival time", Estimated_time.class);
+				if(mission != null)
+				{
+					mission.updateEngaged(person,time);
+				}
+				sendAllInSessionGroup(piSessions,message);
 			}
 			break;
 		case "auth":
-			//toDo: auth between server and client
 			String clientToken = json.get("token").getAsString();
+			String clientType = json.get("type").getAsString();
+			if(token.equals(clientToken))
+			{
+				if(clientType.equals("pi"))
+				{
+					piSessions.add(session);
+				}
+				else if(clientType.equals("android"))
+				{
+					androidSession.add(session);	
+				}
+				else if(clientType.equals("client"))
+				{
+					clientSessions.add(session);
+				}
+			}
 			break;
-		//toDo: case update estimated time, in this case you can send the person and a JSON Property estimated time
 		default:
 			System.out.println("unkown command: " + action);
 			break;
 		}
-		sendAll(message);
 	}
 	
 	@Override
 	public void onWebSocketClose(int statusCode, String reason) {
 		super.onWebSocketClose(statusCode, reason);
 		System.out.println("Socket Closed: [" + statusCode + "] " + reason);
-		sessions.remove(session);
+		piSessions.remove(session);
+		androidSession.remove(session);
+		clientSessions.remove(session);
 	}
 	
-	private void checkToken(String token) {
-		if (!token.equals(this.token))
+	private boolean checkToken(String token) {
+		if (token.equals(ServerSocket.token))
 		{
-			try {
-				session.disconnect();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			return true;
 		}
+		
+		try {
+			session.disconnect();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	private void sendAll(String message){
-		for (Session session : sessions) {
+		sendAllInSessionGroup(clientSessions,message);
+		sendAllInSessionGroup(piSessions,message);
+		sendAllInSessionGroup(androidSession,message);
+	}
+
+	private void sendAllInSessionGroup(Set<Session> group,String message)
+	{
+		for (Session session : group) {
 			try {
 				if(session != this.session){
 					session.getRemote().sendString(message);

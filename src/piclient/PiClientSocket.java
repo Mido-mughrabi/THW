@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import controller.PiController;
+import io.IO;
 import model.Mission;
 import model.Person;
 import model.Estimated_time;
@@ -21,6 +22,7 @@ public class PiClientSocket extends WebSocketAdapter{
 	private PiController controller;
 	private Gson gson = new Gson();
 	static private Mission mission = null;
+	String token = IO.getToken();
 	
 	public void setController(PiController control) {
 		this.controller = control;
@@ -31,7 +33,16 @@ public class PiClientSocket extends WebSocketAdapter{
 		super.onWebSocketConnect(sess);
 		controller.init();
 		System.out.println("Socket connected : " + sess);
-		//toDo: maybe want to tell the server that this client is a pi client
+		
+		JsonObject json = new JsonObject();
+		json.addProperty("action", "auth");
+		json.addProperty("token", token);
+		json.addProperty("type", "pi");
+		try {
+			getSession().getRemote().sendString(json.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -40,16 +51,14 @@ public class PiClientSocket extends WebSocketAdapter{
 		System.out.println("Received TEXT message: " + message);
 		JsonElement jelem = gson.fromJson(message, JsonElement.class);
 		JsonObject json = jelem.getAsJsonObject();
-		//toDo: what to do with received messages
+
 		String action = json.get("action").getAsString();
 		switch (action) {
 		case "start mission":
-			//toDo: start mission
 			mission = gson.fromJson(json.get("mission"), Mission.class);
 			controller.startMission(mission);
 			break;
 		case "end mission":
-			//toDo: end mission, using the piController if needed
 			controller.endMission();
 			break;
 		case "update arrival time":

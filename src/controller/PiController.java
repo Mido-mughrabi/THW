@@ -39,7 +39,6 @@ public class PiController {
 	}
 
 	public void init() {
-		//tipp ToDo: use PiclientSocket to tell the server that a new piclient has connected
 		model.addObserver(view);
 	}
 
@@ -57,7 +56,6 @@ public class PiController {
 	}
 
 	public void updateEngaged(Person person, Estimated_time time) {
-		// TODO Auto-generated method stub
 		model.updatePersonArrivalTime(person,time);
 	}
 	
