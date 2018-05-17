@@ -51,6 +51,7 @@ public class ServerSocket extends WebSocketAdapter{
 		case "add person":
 			if(checkToken(json.get("token").getAsString()))
 			{
+				System.out.println(json.get("person"));
 				person = gson.fromJson(json.get("person"), Person.class);
 				ServerModel.addPerson(person);
 				sendAllInSessionGroup(clientSessions,message);

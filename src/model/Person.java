@@ -3,18 +3,36 @@ package model;
 public class Person {
 	private String call_number;
 	private String surname;
+	private int id;
 	Functions function;
 	Unit_types unit_type;
 	boolean aGT;
 	boolean kfCe;
 	boolean kfBRmG;
 	boolean bedMotSag;
-	public Person(String call_number, String surname, Functions function,  Unit_types unit_type) {
+        
+	public Person(String call_number, String surname, Functions function,  Unit_types unit_type, boolean aGT, boolean kfCe, boolean kfBRmG, boolean bedMotSag,int id) {
 		this.setCall_number(call_number);
 		this.setSurname(surname);
 		this.setfunction(function);
 		this.setunit_type(unit_type);
+		this.aGT=aGT;
+		this.kfCe=kfCe;
+		this.kfBRmG=kfBRmG;
+		this.bedMotSag=bedMotSag;
+		this.id=id;
+                
 	}
+
+	public int getid() {
+		return this.id;
+	}
+
+	public void setid(int id) {
+		this.id = id;
+	}
+        
+        
 
 	public boolean isaGT() {
 		return aGT;
