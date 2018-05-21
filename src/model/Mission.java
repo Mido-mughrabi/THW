@@ -24,6 +24,7 @@ public class Mission {
 	
 	public void addEngaged(Person person)
 	{
+		if(person == null) return;
 		engaged.put(person.toString(), Estimated_time.UNKNOWN.toString());
 	}
 

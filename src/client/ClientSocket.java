@@ -28,7 +28,7 @@ public class ClientSocket extends WebSocketAdapter{
 		System.out.println("Socket connected : " + sess);
 		//toDo: maybe want to call some init functions here
 		////////////////////////////////////////////////////////// testArea, please delete
-		JsonObject json = new JsonObject();
+		/*JsonObject json = new JsonObject();
 		json.addProperty("token", token);
 		json.addProperty("type", "client");
 		json.addProperty("action", "start mission");
@@ -45,7 +45,7 @@ public class ClientSocket extends WebSocketAdapter{
 			getSession().getRemote().sendString(json.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 		/////////////////////////////////////////////////////////
 	}
 	

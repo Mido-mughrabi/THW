@@ -77,8 +77,15 @@ public class ServerSocket extends WebSocketAdapter{
 			if(checkToken(json.get("token").getAsString()))
 			{
 				mission = gson.fromJson(json.get("mission"), Mission.class);
+				for(Person p : ServerModel.getPersons())
+				{
+					System.out.println(p);
+					mission.addEngaged(p);
+				}
 				ServerModel.startMission(mission);
-				sendAll(message);		
+				json.remove("mission");
+				json.add("mission",  gson.toJsonTree(mission));
+				sendAll(json.toString());		
 			}
 			break;
 		case "end mission":

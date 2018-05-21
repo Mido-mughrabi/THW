@@ -20,7 +20,7 @@ public class PiView extends JFrame implements Observer{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = new JPanel();
 		setContentPane(contentPane);
-		contentPane.add(new JLabel("Warte auf Server"));
+		contentPane.add(new JLabel("Warte auf Einsatz"));
 		setSize(100,600);
 		setVisible(true);
 	}

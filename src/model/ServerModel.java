@@ -42,4 +42,9 @@ public class ServerModel {
 	{
 		this.mission = null;
 	}
+	
+	public Set<Person> getPersons()
+	{
+		return persons;
+	}
 }
