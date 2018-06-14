@@ -47,4 +47,16 @@ public class ServerModel {
 	{
 		return persons;
 	}
+	
+	public Person getPerson(String callNumber)
+	{
+		for(Person p: persons)
+		{
+			if(callNumber.equals(p.getCall_number()))
+			{
+				return p;
+			}
+		}
+		return null;
+	}
 }

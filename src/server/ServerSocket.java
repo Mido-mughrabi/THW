@@ -1,6 +1,7 @@
 package server;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -71,6 +72,19 @@ public class ServerSocket extends WebSocketAdapter{
 				person = gson.fromJson(json.get("person"), Person.class);
 				ServerModel.updatePerson(person);
 				sendAllInSessionGroup(clientSessions,message);
+			}
+			break;
+		case "get person":
+			if(checkToken(json.get("token").getAsString()))
+			{
+				String callNumber = json.get("callNumber").getAsString();
+				Person searchPerson = ServerModel.getPerson(callNumber);
+				JsonObject jsonReply = new JsonObject();
+				jsonReply.addProperty("token", token);
+				jsonReply.addProperty("type", "server");
+				jsonReply.addProperty("action", "person reply");
+				jsonReply.add("person", gson.toJsonTree(searchPerson));
+				reply(jsonReply.toString());
 			}
 			break;
 		case "start mission":
@@ -173,6 +187,15 @@ public class ServerSocket extends WebSocketAdapter{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	private void reply(String message) 
+	{
+		try {
+			session.getRemote().sendString(message);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }
