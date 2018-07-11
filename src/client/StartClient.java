@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.concurrent.Future;
 
@@ -62,7 +63,7 @@ public class StartClient {
 					json.addProperty("token", clientSocket.token);
 					json.addProperty("type", "client");
 					json.addProperty("action", "start mission");
-					Mission m = new Mission(LocalDateTime.now());
+					Mission m = new Mission(new Timestamp(System.currentTimeMillis()));
 					json.add("mission", gson.toJsonTree(m));
 					try {
 						clientSocket.getSession().getRemote().sendString(json.toString());
